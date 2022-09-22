@@ -1,7 +1,10 @@
 package com.hyl.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hyl.entity.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IBookService extends IService<Book> {
 
+//    分页查询
+    IPage<Book> MyGetByPage(Integer current, Integer size);
+
 }
+

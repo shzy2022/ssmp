@@ -1,5 +1,8 @@
 package com.hyl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hyl.dao.BookDao;
 import com.hyl.entity.Book;
 import org.junit.jupiter.api.Test;
@@ -10,16 +13,9 @@ import java.util.List;
 
 @SpringBootTest
 class SsmpApplicationTests {
-    @Autowired
-    BookDao bookDao;
 
     @Test
     void contextLoads() {
-        List<Book> books = bookDao.selectList(null);
-        for (Book book:books
-             ) {
-            System.out.println(book);
-        }
     }
 
 }

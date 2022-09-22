@@ -1,15 +1,11 @@
 package com.hyl.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 
-import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.ibatis.annotations.Delete;
-
 /**
  * <p>
  * 
@@ -34,6 +30,7 @@ public class Book implements Serializable {
 
     private String description;
 
+    @TableField(select = false)
     private Integer deleted;
 
 
