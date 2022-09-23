@@ -8,11 +8,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CRM {
-    private Boolean Code;
+    private Boolean code;
     private Object data = null;
     private String msg = null;
 
     public CRM(Boolean code) {
-        Code = code;
+        this.code = code;
+    }
+
+
+
+    public CRM(Boolean code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 }

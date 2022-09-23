@@ -1,5 +1,6 @@
 package com.hyl.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hyl.entity.Book;
@@ -27,5 +28,11 @@ public class BookServiceImpl extends ServiceImpl<BookDao, Book> implements IBook
     public IPage<Book> MyGetByPage(Integer current, Integer size) {
         IPage page = new Page(current,size);
         return bookDao.selectPage(page,null);
+    }
+
+    @Override
+    public IPage<Book> MyGetByPage(Integer current, Integer size, LambdaQueryWrapper lwq) {
+        IPage page = new Page(current,size);
+        return bookDao.selectPage(page,lwq);
     }
 }

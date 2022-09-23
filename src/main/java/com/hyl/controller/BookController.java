@@ -1,17 +1,16 @@
 package com.hyl.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hyl.controller.utils.CRM;
 import com.hyl.entity.Book;
 import com.hyl.service.IBookService;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -28,22 +27,31 @@ public class BookController {
     private IBookService bookService;
     //保存数据
     @PostMapping
-    public CRM BookSave(@RequestBody Book book){
+    public CRM BookSave(@RequestBody Book book) throws IOException {
+//        if(book.getName().equals("123")){
+//            throw new IOException();
+//        }
         Boolean code = bookService.save(book);
-        return new CRM(code);
+        return new CRM(code,code?"添加成功":"添加失败");
     }
     //通过ID删除数据
     @DeleteMapping("/{id}")
     public CRM BookDeleteByID(@PathVariable Integer id){
         Boolean code = bookService.removeById(id);
-        return new CRM(code);
+        return new CRM(code,code?"删除成功":"删除失败");
     }
     //通过ID更改数据
     @PutMapping("/{id}")
     public CRM BookUpdateByID(@PathVariable Integer id,@RequestBody Book book){
         book.setId(id);
         Boolean code = bookService.updateById(book);
-        return new CRM(code);
+        return new CRM(code,code?"更新成功":"更新失败");
+    }
+    //通过ID更改数据
+    @PutMapping
+    public CRM BookUpdate(@RequestBody Book book){
+        Boolean code = bookService.updateById(book);
+        return new CRM(code,code?"更新成功":"更新失败");
     }
     //通过ID查询数据
     @GetMapping("/{id}")
@@ -53,6 +61,7 @@ public class BookController {
         try {
             Book book = bookService.getById(id);
             crm.setData(book);
+            crm.setMsg("查询成功");
         }catch (Exception e){
             crm.setCode(false);
             crm.setMsg("系统出错，请联系工作人员");
@@ -67,6 +76,7 @@ public class BookController {
         try {
             List<Book> books = bookService.list(null);
             crm.setData(books);
+            crm.setMsg("查询成功");
         }catch (Exception e){
             crm.setCode(false);
             crm.setMsg("系统出错，请联系工作人员");
@@ -74,22 +84,46 @@ public class BookController {
         return crm;
     }
     //查询分页数据
+//    @GetMapping("/{current}/{size}")
+//    public CRM BookGetByPage(@PathVariable Integer current,@PathVariable Integer size){
+//        CRM crm = new CRM();
+//        crm.setCode(true);
+//        try {
+//            IPage<Book> page = bookService.MyGetByPage(current, size);
+//            if(current>page.getPages()){
+//                page = bookService.MyGetByPage((int)page.getPages(), size);
+//            }
+//            crm.setData(page);
+//            crm.setMsg("查询成功");
+//        }catch (Exception e){
+//            crm.setCode(false);
+//            crm.setMsg("系统出错，请联系工作人员");
+//        }
+//        return crm;
+//    }
+    //查询特定数据
+//查询分页数据
     @GetMapping("/{current}/{size}")
-    public CRM BookGetByPage(@PathVariable Integer current,@PathVariable Integer size){
+    public CRM BookGetByPage(@PathVariable Integer current,@PathVariable Integer size,Book book){
+//        System.out.println(book);
         CRM crm = new CRM();
         crm.setCode(true);
         try {
-            IPage<Book> page = bookService.MyGetByPage(current, size);
+            LambdaQueryWrapper<Book> lqw = new LambdaQueryWrapper<Book>();
+            lqw.like(!(book.getName().equals("")),Book::getName,book.getName())
+                    .like(!(book.getName().equals("")),Book::getType,book.getType())
+                    .like(!(book.getName().equals("")),Book::getDescription,book.getDescription());
+            IPage<Book> page = bookService.MyGetByPage(current, size,lqw);
+            if(current>page.getPages()){
+                page = bookService.MyGetByPage((int)page.getPages(), size,lqw);
+            }
             crm.setData(page);
+            crm.setMsg("查询成功");
         }catch (Exception e){
             crm.setCode(false);
             crm.setMsg("系统出错，请联系工作人员");
         }
         return crm;
     }
-    //查询特定数据
-//    public CRM BookGetByWrapper(Book book){
-//        return new CRM();
-//    }
 }
 
